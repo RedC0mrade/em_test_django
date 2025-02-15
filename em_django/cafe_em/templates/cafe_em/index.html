@@ -1,0 +1,14 @@
+<h1>cafe_em App</h1>
+
+{% for order in orders %}
+  <h2>Заказ {{ order.id }} - Стол {{ order.table_number }}</h2>
+  <p>Статус: {{ order.get_status_display }}</p>
+  <ul>
+    {% for item in order.order_items.all %}
+      <li>{{ item.dish.name }} - {{ item.quantity }} шт.</li>
+    {% endfor %}
+  </ul>
+  <p>Общая стоимость: {{ order.total_price }}</p>
+{% empty %}
+  <p>Заказов пока нет.</p>
+{% endfor %}
