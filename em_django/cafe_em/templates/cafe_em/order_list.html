@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>Список заказов</h1>
+
+{% for order in orders %}
+    <div class="order">
+        <h2>Заказ(id) {{ order.id }} - Стол {{ order.table_number }}</h2>
+        <p>Статус: {{ order.get_status_display }}</p>
+        <ul>
+            {% for item in order.order_items.all %}
+                <li>
+                    <a href="{% url 'cafe_em:dish_detail' item.dish.id %}">
+                        {{ item.dish.name }}
+                    </a> - {{ item.quantity }} шт.
+                </li>
+            {% endfor %}
+        </ul>
+        <p><strong>Общая стоимость:</strong> {{ order.total_price }} рублей</p>
+    </div>
+{% empty %}
+    <p>Заказов пока нет.</p>
+{% endfor %}
+
+{% include "pagination.html" %}
+
+{% endblock %}
+

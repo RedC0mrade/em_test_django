@@ -30,7 +30,10 @@ class Order(models.Model):
     class Meta:
         verbose_name = "Order"
 
-    table_number = models.PositiveIntegerField(verbose_name="Номер стола")
+    table_number = models.PositiveIntegerField(
+        verbose_name="Номер стола",
+        unique=True,
+    )
     status = models.CharField(
         max_length=10,
         choices=Status.choices,
@@ -93,10 +96,10 @@ class OrderItem(models.Model):
             raise ValidationError(
                 "Это блюдо уже добавлено в заказ, измените количество."
             )
-        
+
     def save(self, *args, **kwargs):
         self.full_clean()
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"{self.quantity} x {self.dish.name}"
+        return f"{self.dish.name} - {self.quantity}шт"

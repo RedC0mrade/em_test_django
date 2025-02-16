@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Список заказов</title>
+    <title>Список блюд</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 20px; }
         .order { border-bottom: 1px solid #ccc; padding: 10px 0; }
@@ -21,24 +21,16 @@
 </head>
 <body>
 
-    <h1>Список заказов</h1>
+    <h1>Список блюд</h1>
 
-    {% for order in orders %}
-        <div class="order">
-            <h2>Заказ {{ order.id }} - Стол {{ order.table_number }}</h2>
-            <p>Статус: {{ order.get_status_display }}</p>
-            <ul>
-                {% for item in order.order_items.all %}
-                    <li>{{ item.dish.name }} - {{ item.quantity }} шт.</li>
-                {% endfor %}
-            </ul>
-            <p><strong>Общая стоимость:</strong> {{ order.total_price }} рублей</p>
+    {% for dish in dishs %}
+        <div class="dish">
+            <h2>Название {{ dish.name }} - цена: {{ dish.price }} рублей</h2>
         </div>
     {% empty %}
-        <p>Заказов пока нет.</p>
+        <p>Блюд пока нет.</p>
     {% endfor %}
 
-    <!-- Пагинация -->
     <div class="pagination">
         {% if page_obj.has_previous %}
             <a href="?page=1">Первая</a>

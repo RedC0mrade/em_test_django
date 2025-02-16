@@ -1,0 +1,6 @@
+<div>
+    <h2>Блюдо(id) №{{ object.id }}</h2>
+    <p><strong>Название:</strong> {{ object.name }}</p>
+    <p><strong>Стоимость:</strong> {{ object.price }} рублей</p>
+    <a href="{% url 'cafe_em:order_list' %}">Назад к списку заказов</a>
+</div>

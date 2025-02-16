@@ -1,0 +1,16 @@
+<div>
+    <h2>Заказ №{{ object.id }} - Стол {{ object.table_number }}</h2>
+    <p><strong>Статус:</strong> {{ object.get_status_display }}</p>
+    <p><strong>Общая стоимость:</strong> {{ object.total_price }} рублей</p>
+
+    <h3>Заказанные блюда:</h3>
+    <ul>
+        {% for item in object.order_items.all %}
+            <li>{{ item.dish.name }} - {{ item.quantity }} шт.</li>
+        {% empty %}
+            <li>Блюда не добавлены.</li>
+        {% endfor %}
+    </ul>
+
+    <a href="{% url 'cafe_em:order_list' %}">Назад к списку заказов</a>
+</div>

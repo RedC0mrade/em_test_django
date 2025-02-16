@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Создайте свой заказ</h1>
+    <form method="post">
+        {% csrf_token %}
+        
+        {{ form.as_p }}
+
+        <h2>Выберите блюда:</h2>
+        {{ order_items.management_form }}
+
+        <div id="order-items">
+            {% for form in order_items %}
+                <div class="order-item">
+                    {{ form.as_p }}
+                </div>
+            {% endfor %}
+        </div>
+
+        <input type="submit" value="Add">
+    </form>
+{% endblock %}
