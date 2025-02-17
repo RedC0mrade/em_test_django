@@ -81,21 +81,6 @@ class OrderItem(models.Model):
             )
         ]
 
-    def clean(self):
-        """Проверяем на случайное дублирование позиции в заказе"""
-        if not self.order_id or not self.dish_id:
-            return
-        if (
-            OrderItem.objects.filter(
-                order=self.order,
-                dish=self.dish,
-            )
-            .exclude(pk=self.pk)
-            .exists()
-        ):
-            raise ValidationError(
-                "Это блюдо уже добавлено в заказ, измените количество."
-            )
 
     def save(self, *args, **kwargs):
         self.full_clean()

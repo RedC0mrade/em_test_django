@@ -11,6 +11,11 @@
             <li>Блюда не добавлены.</li>
         {% endfor %}
     </ul>
-
-    <a href="{% url 'cafe_em:order_list' %}">Назад к списку заказов</a>
+    </div>
+        <a href="{% url 'cafe_em:order_update_form' object.id %}">Обновить заказ</a>
+    </div>
+    <div>
+        <a href="{% url 'cafe_em:order_list' %}">Назад к списку заказов</a>
+    </div>
+    
 </div>

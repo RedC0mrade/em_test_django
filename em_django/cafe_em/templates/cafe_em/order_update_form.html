@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-    <h1>Создайте свой заказ</h1>
+    <h1>Измените свой заказ</h1>
     <form method="post">
         {% csrf_token %}
         
@@ -18,6 +18,6 @@
             {% endfor %}
         </div>
 
-        <input type="submit" value="Сделать заказ">
+        <input type="submit" value="Изменить заказ">
     </form>
 {% endblock %}

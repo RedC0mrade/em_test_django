@@ -35,4 +35,9 @@ urlpatterns = [
         views.DishCreateView.as_view(),
         name="dish_form",
     ),
+    path(
+        "<int:pk>/order_update",
+        views.OrderUpdateView.as_view(),
+        name="order_update_form",
+    ),
 ]

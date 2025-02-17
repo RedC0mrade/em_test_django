@@ -2,29 +2,7 @@ from django import forms
 from .models import Dish, Order, OrderItem
 
 
-# class CustomOrderItemFormSet(forms.BaseInlineFormSet):
-#     def clean(self):
-#         """Проверяем, что нет дубликатов блюд в одном заказе"""
-#         super().clean()
-#         errors = []
-#         dishes = []
-
-#         for form in self.forms:
-#             if form.cleaned_data and not form.cleaned_data.get(
-#                 "DELETE",
-#                 False,
-#             ):
-#                 dish = form.cleaned_data.get("dish")
-
-#                 if dish in dishes:
-#                     errors.append(f"Блюдо '{dish}' добавлено дважды.")
-#                 dishes.append(dish)
-
-#         if errors:
-#             raise forms.ValidationError(errors)  # Теперь ошибка глобальная
-
-
-class OrderForm(forms.ModelForm):
+class OrderCreateForm(forms.ModelForm):
     class Meta:
         model = Order
         fields = ["table_number"]
@@ -39,39 +17,20 @@ class OrderForm(forms.ModelForm):
 class OrderItemForm(forms.ModelForm):
     class Meta:
         model = OrderItem
-        fields = ["dish", "quantity"]
-
-    def clean(self):
-        cleaned_data = super().clean()
-        dish = cleaned_data.get("dish")
-        order = getattr(
-            self.instance,
-            "order",
-            None,
-        )
-
-        if order and dish:
-            existing = OrderItem.objects.filter(
-                order=order,
-                dish=dish,
-            ).exclude(pk=self.instance.pk)
-            if existing.exists():
-                raise forms.ValidationError(
-                    "Это блюдо уже добавлено, измените количество."
-                )
-
-        return cleaned_data
+        fields = ["dish", "quantity",]
 
 
 OrderItemFormSet = forms.inlineformset_factory(
     Order,
     OrderItem,
     form=OrderItemForm,
-    # formset=CustomOrderItemFormSet,
     extra=5,
     can_delete=False,
 )
 
+class OrderUpdateForm(forms.ModelForm):
+    class Meta(OrderCreateForm.Meta):
+        fields = ["table_number", "status",]
 
 class DishForm(forms.ModelForm):
     class Meta:
