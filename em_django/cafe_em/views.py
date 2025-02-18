@@ -1,6 +1,12 @@
 from django.http import Http404
 from django.shortcuts import redirect, render
-from django.views.generic import ListView, DetailView, CreateView, UpdateView
+from django.views.generic import (
+    ListView,
+    DetailView,
+    CreateView,
+    UpdateView,
+    DeleteView,
+)
 
 from .forms import DishForm, OrderCreateForm, OrderItemFormSet, OrderUpdateForm
 from .models import Dish, Order
@@ -88,16 +94,19 @@ class OrderCreateView(CreateView):
         context["order_items"] = order_items  # Передаём существующий formset
         return self.render_to_response(context)
 
+
 class OrderUpdateView(UpdateView):
     model = Order
     form_class = OrderUpdateForm
     template_name_suffix = "_update_form"
     success_url = "/"
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         if self.request.POST:
-            context["order_items"] = OrderItemFormSet(self.request.POST, instance=self.object)
+            context["order_items"] = OrderItemFormSet(
+                self.request.POST, instance=self.object
+            )
         else:
             context["order_items"] = OrderItemFormSet(instance=self.object)
         return context
@@ -113,6 +122,11 @@ class OrderUpdateView(UpdateView):
             return redirect(self.success_url)
 
         return self.render_to_response(context)
+
+
+class OrderDeleteView(DeleteView):
+    pass
+
 
 class DishCreateView(CreateView):
     model = Dish

@@ -17,7 +17,10 @@ class OrderCreateForm(forms.ModelForm):
 class OrderItemForm(forms.ModelForm):
     class Meta:
         model = OrderItem
-        fields = ["dish", "quantity",]
+        fields = [
+            "dish",
+            "quantity",
+        ]
 
 
 OrderItemFormSet = forms.inlineformset_factory(
@@ -28,9 +31,14 @@ OrderItemFormSet = forms.inlineformset_factory(
     can_delete=False,
 )
 
+
 class OrderUpdateForm(forms.ModelForm):
     class Meta(OrderCreateForm.Meta):
-        fields = ["table_number", "status",]
+        fields = [
+            "table_number",
+            "status",
+        ]
+
 
 class DishForm(forms.ModelForm):
     class Meta:

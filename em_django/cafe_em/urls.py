@@ -40,4 +40,9 @@ urlpatterns = [
         views.OrderUpdateView.as_view(),
         name="order_update_form",
     ),
+    path(
+        "<int:pk>/order_delete",
+        views.OrderDeleteView.as_view(),
+        name="order_delete",
+    ),
 ]
