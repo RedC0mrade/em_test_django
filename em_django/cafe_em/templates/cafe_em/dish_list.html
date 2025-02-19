@@ -1,49 +1,72 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Список блюд</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; }
-        .order { border-bottom: 1px solid #ccc; padding: 10px 0; }
-        .pagination { margin-top: 20px; }
-        .pagination a, .pagination span {
-            margin: 0 5px;
-            text-decoration: none;
-            padding: 5px 10px;
-            border: 1px solid #007bff;
-            color: #007bff;
-            border-radius: 5px;
-        }
-        .pagination a:hover { background: #007bff; color: #fff; }
-    </style>
-</head>
-<body>
+{% extends 'base.html' %}
 
-    <h1>Список блюд</h1>
+{% block title %}
+    Список блюд
+{% endblock %}
 
-    {% for dish in dishs %}
-        <div class="dish">
-            <h2>Название {{ dish.name }} - цена: {{ dish.price }} рублей</h2>
-        </div>
-    {% empty %}
-        <p>Блюд пока нет.</p>
-    {% endfor %}
+{% block content %}
 
-    <div class="pagination">
-        {% if page_obj.has_previous %}
-            <a href="?page=1">Первая</a>
-            <a href="?page={{ page_obj.previous_page_number }}">«</a>
-        {% endif %}
+    <h1 class="page-title">Список блюд</h1>
 
-        <span>Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}</span>
-
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">»</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}">Последняя</a>
-        {% endif %}
+    <div class="dish-list">
+        {% for dish in dishs %}
+            <div class="dish-card">
+                <h3>
+                    <a href="{% url 'cafe_em:dish_detail' dish.id %}" class="dish-link">
+                        {{ dish.name }}
+                    </a>
+                </h3>
+                <p class="dish-price">Цена: <strong>{{ dish.price }}</strong> рублей</p>
+            </div>
+        {% empty %}
+            <p class="no-dishes">Блюд пока нет.</p>
+        {% endfor %}
     </div>
 
-</body>
-</html>
+    <style>
+        .page-title {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .dish-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .dish-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 250px;
+        }
+
+        .dish-link {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .dish-link:hover {
+            text-decoration: underline;
+            color: #0056b3;
+        }
+
+        .dish-price {
+            margin-top: 10px;
+            font-size: 1.1em;
+        }
+
+        .no-dishes {
+            text-align: center;
+            font-size: 1.2em;
+            color: #555;
+        }
+    </style>
+
+{% endblock %}

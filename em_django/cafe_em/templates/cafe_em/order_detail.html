@@ -1,24 +1,104 @@
-<div>
-    <h2>Заказ №{{ object.id }} - Стол {{ object.table_number }}</h2>
-    <p><strong>Статус:</strong> {{ object.get_status_display }}</p>
-    <p><strong>Общая стоимость:</strong> {{ object.total_price }} рублей</p>
+{% extends 'base.html' %}
 
-    <h3>Заказанные блюда:</h3>
-    <ul>
-        {% for item in object.order_items.all %}
-            <li>{{ item.dish.name }} - {{ item.quantity }} шт.</li>
-        {% empty %}
-            <li>Блюда не добавлены.</li>
-        {% endfor %}
-    </ul>
+{% block title %}
+    Заказ стола {{ object.table_number }}
+{% endblock %}
+
+{% block content %}
+    <div class="order-container">
+        <h1 class="page-title">Заказ №{{ object.id }} - Стол {{ object.table_number }}</h1>
+        <p class="order-status"><strong>Статус:</strong> {{ object.get_status_display }}</p>
+        <p class="order-total"><strong>Общая стоимость:</strong> {{ object.total_price }} рублей</p>
+
+        <h3>Заказанные блюда:</h3>
+        <ul class="order-items-list">
+            {% for item in object.order_items.all %}
+                <li class="order-item">{{ item.dish.name }} - {{ item.quantity }} шт.</li>
+            {% empty %}
+                <li class="no-items">Блюда не добавлены.</li>
+            {% endfor %}
+        </ul>
+
+        <div class="order-actions">
+            <ul>
+                <li><a href="{% url 'cafe_em:order_update_form' object.id %}" class="btn">Обновить заказ</a></li>
+                <li><a href="{% url 'cafe_em:order_delete' object.id %}" class="btn btn-danger">Удалить заказ</a></li>
+                <li><a href="{% url 'cafe_em:order_list' %}" class="btn btn-secondary">Назад к списку заказов</a></li>
+            </ul>
+        </div>
     </div>
-        <a href="{% url 'cafe_em:order_update_form' object.id %}">Обновить заказ</a>
-    </div>
-    <div>
-        <a href="{ url 'cafe_em:order_delete_form' object.id %}">Удалить заказ</a>
-    </div>
-    <div>
-        <a href="{% url 'cafe_em:order_list' %}">Назад к списку заказов</a>
-    </div>
-    
-</div>
+
+    <style>
+        .order-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .page-title {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .order-status, .order-total {
+            font-size: 1.1em;
+            margin: 10px 0;
+        }
+
+        .order-items-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .order-item {
+            margin: 5px 0;
+        }
+
+        .no-items {
+            font-size: 1.1em;
+            color: #555;
+        }
+
+        .order-actions ul {
+            list-style-type: none;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .btn {
+            padding: 10px 15px;
+            background: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            background: #0056b3;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+    </style>
+{% endblock %}

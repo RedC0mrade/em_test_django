@@ -1,12 +1,14 @@
-from django.http import Http404
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect
+from django.urls import reverse_lazy
 from django.views.generic import (
     ListView,
     DetailView,
     CreateView,
     UpdateView,
     DeleteView,
+    TemplateView,
 )
+from django.db.models import F, Sum, Q
 
 from .forms import DishForm, OrderCreateForm, OrderItemFormSet, OrderUpdateForm
 from .models import Dish, Order
@@ -17,8 +19,25 @@ class OrderListView(ListView):
     context_object_name = "orders"
     paginate_by = 5
 
+    STATUS_TRANSLATION = {
+        "в ожидании": Order.Status.WAITING,
+        "готово": Order.Status.READY,
+        "оплачено": Order.Status.PAID,
+    }
+
     def get_queryset(self):
-        return Order.objects.order_by("-id")
+        queryset = Order.objects.order_by("-id")
+        query = self.request.GET.get("q")
+
+        if query:
+            translated_status = self.STATUS_TRANSLATION.get(query.lower())
+
+            queryset = queryset.filter(
+                Q(table_number__icontains=query)
+                | Q(status=translated_status if translated_status else query)
+            )
+
+        return queryset
 
 
 class DishListView(ListView):
@@ -33,35 +52,9 @@ class DishListView(ListView):
 class OrderDetailView(DetailView):
     model = Order
 
-    def get_object(self, queryset=None):
-        try:
-            return super().get_object(queryset)
-        except Http404:
-            return None
-
-    def get(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        if not self.object:
-            return render(request, "cafe_em/404_not_found.html", status=404)
-        context = self.get_context_data(object=self.object)
-        return self.render_to_response(context)
-
 
 class DishDetailView(DetailView):
     model = Dish
-
-    def get_object(self, queryset=None):
-        try:
-            return super().get_object(queryset)
-        except Http404:
-            return None
-
-    def get(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        if not self.object:
-            return render(request, "cafe_em/404_not_found.html", status=404)
-        context = self.get_context_data(object=self.object)
-        return self.render_to_response(context)
 
 
 class OrderCreateView(CreateView):
@@ -82,16 +75,18 @@ class OrderCreateView(CreateView):
         order_items = context["order_items"]
 
         if form.is_valid():
-            self.object = form.save(commit=False)  # Заказ создаём, но НЕ сохраняем
-            order_items.instance = self.object  # Передаём заказ в формсет
+            self.object = form.save(
+                commit=False
+            )
+            order_items.instance = self.object
 
             if order_items.is_valid():
-                self.object.save()  # Теперь сохраняем заказ
-                order_items.save()  # Теперь сохраняем OrderItem'ы
+                self.object.save()
+                order_items.save()
                 return redirect(self.success_url)
 
         context["form"] = form
-        context["order_items"] = order_items  # Передаём существующий formset
+        context["order_items"] = order_items
         return self.render_to_response(context)
 
 
@@ -125,10 +120,29 @@ class OrderUpdateView(UpdateView):
 
 
 class OrderDeleteView(DeleteView):
-    pass
+    model = Order
+    success_url = reverse_lazy("cafe_em:order_list")
 
 
 class DishCreateView(CreateView):
     model = Dish
     form_class = DishForm
-    success_url = "/"
+    success_url = "new_dish"
+
+
+class OrderTotalSumView(TemplateView):
+    template_name = "cafe_em/total_sum.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        total_sum = (
+            Order.objects.filter(status=Order.Status.PAID).aggregate(
+                total=Sum(
+                    F("order_items__quantity") * F("order_items__dish__price")
+                )
+            )["total"]
+            or 0
+        )
+
+        context["total_sum"] = total_sum
+        return context

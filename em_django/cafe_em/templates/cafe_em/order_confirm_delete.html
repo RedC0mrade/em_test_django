@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Подтверждение удаления заказа #{{ object.id }}
+{% endblock %}
+
+{% block content %}
+    <div class="delete-container">
+        <h2>Подтверждение удаления</h2>
+        <p>Вы уверены, что хотите удалить заказ для стола <strong>№{{ object.table_number }}</strong>?</p>
+        
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Удалить</button>
+            <a href="{% url 'cafe_em:order_detail' object.pk %}" class="btn btn-secondary">Отмена</a>
+        </form>
+    </div>
+
+    <style>
+        .delete-container {
+            max-width: 500px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .btn {
+            display: inline-block;
+            margin: 10px;
+            padding: 10px 15px;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: 0.3s;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .btn-danger {
+            background: #dc3545;
+            color: #fff;
+            border: none;
+        }
+        .btn-danger:hover {
+            background: #c82333;
+        }
+        .btn-secondary {
+            background: #6c757d;
+            color: #fff;
+            text-decoration: none;
+        }
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+    </style>
+{% endblock %}

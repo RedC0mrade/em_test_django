@@ -1,9 +1,56 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
+
+{% block title %}
+    Внесите новое блюдо в меню
+{% endblock %}
+
 {% block content %}
-    <h1>Внесите новое блюдо в Меню</h1>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Add">
-    </form>
+    <div class="form-container">
+        <h1>Внесите новое блюдо в меню</h1>
+        <form method="post">
+            {% csrf_token %}
+            <div class="form-group">
+                {{ form.as_p }}
+            </div>
+            <button type="submit" class="btn">Добавить</button>
+        </form>
+        <a href="{% url 'cafe_em:order_list' %}" class="btn btn-secondary">Назад к списку заказов</a>
+    </div>
+
+    <style>
+        .form-container {
+            max-width: 500px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        .form-group {
+            text-align: left;
+        }
+        .btn {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 15px;
+            background: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+        .btn:hover {
+            background: #0056b3;
+        }
+        .btn-secondary {
+            background: #6c757d;
+            margin-left: 10px;
+        }
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+    </style>
 {% endblock %}

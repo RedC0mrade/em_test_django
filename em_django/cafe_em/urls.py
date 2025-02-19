@@ -4,6 +4,9 @@ from . import views
 
 app_name = "cafe_em"
 
+handler404 = "cafe_em.views.custom_404_view"
+
+
 urlpatterns = [
     path(
         "",
@@ -44,5 +47,10 @@ urlpatterns = [
         "<int:pk>/order_delete",
         views.OrderDeleteView.as_view(),
         name="order_delete",
+    ),
+    path(
+        "total_sum",
+        views.OrderTotalSumView.as_view(),
+        name="total_sum",
     ),
 ]

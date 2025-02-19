@@ -1,16 +1,24 @@
 {% extends "base.html" %}
 
-{% block content %}
-    <h1>Создайте свой заказ</h1>
-    <form method="post">
-        {% csrf_token %}
-        
-        {{ form.as_p }}
+{% block title %}
+    Создайте свой заказ
+{% endblock %}
 
-        <h2>Выберите блюда:</h2>
+{% block content %}
+    <h1 class="page-title">Создайте свой заказ</h1>
+
+    <form method="post" class="order-form">
+        {% csrf_token %}
+
+        <div class="form-group">
+            {{ form.as_p }}
+        </div>
+
+        <h2 class="section-title">Выберите блюда:</h2>
+
         {{ order_items.management_form }}
 
-        <div id="order-items">
+        <div id="order-items" class="order-items-container">
             {% for form in order_items %}
                 <div class="order-item">
                     {{ form.as_p }}
@@ -18,6 +26,64 @@
             {% endfor %}
         </div>
 
-        <input type="submit" value="Сделать заказ">
+        <input type="submit" value="Сделать заказ" class="submit-button">
     </form>
+
+<style>
+    .page-title {
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 1.8em;
+    }
+
+    .order-form {
+        max-width: 600px;
+        margin: 0 auto;
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .section-title {
+        font-size: 1.5em;
+        margin-bottom: 15px;
+        text-align: center;
+    }
+
+    .order-items-container {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .order-item {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 5px;
+        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .submit-button {
+        display: block;
+        width: 100%;
+        padding: 12px;
+        background: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 1.2em;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .submit-button:hover {
+        background: #0056b3;
+    }
+</style>
+
 {% endblock %}

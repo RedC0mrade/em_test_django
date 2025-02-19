@@ -1,23 +1,73 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
+
+{% block title %}
+    Редактирование стола {{ object.table_number }}
+{% endblock %}
 
 {% block content %}
-    <h1>Измените свой заказ</h1>
-    <form method="post">
-        {% csrf_token %}
-        
-        {{ form.as_p }}
+    <div class="form-container">
+        <h1>Измените свой заказ</h1>
+        <form method="post">
+            {% csrf_token %}
 
-        <h2>Выберите блюда:</h2>
-        {{ order_items.management_form }}
+            {{ form.as_p }}
 
-        <div id="order-items">
-            {% for form in order_items %}
-                <div class="order-item">
-                    {{ form.as_p }}
-                </div>
-            {% endfor %}
-        </div>
+            <h2>Выберите блюда:</h2>
+            {{ order_items.management_form }}
 
-        <input type="submit" value="Изменить заказ">
-    </form>
+            <div id="order-items">
+                {% for form in order_items %}
+                    <div class="order-item">
+                        {{ form.as_p }}
+                    </div>
+                {% endfor %}
+            </div>
+
+            <button type="submit" class="btn">Изменить заказ</button>
+        </form>
+    </div>
+
+    <style>
+        .form-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .form-container h1 {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+        }
+
+        .order-item {
+            background: #f8f9fa;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn {
+            padding: 10px 15px;
+            background: #007bff;
+            color: #fff;
+            border: none;
+            text-decoration: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            background: #0056b3;
+        }
+
+        .order-item p {
+            margin: 5px 0;
+        }
+    </style>
 {% endblock %}

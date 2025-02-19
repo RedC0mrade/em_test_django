@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Общая выручка
+{% endblock %}
+
+{% block content %}
+    <div class="revenue-container">
+        <h2 class="page-title">Общая выручка</h2>
+        <p class="revenue-text">Выручка за оплаченные заказы: <strong>{{ total_sum }} ₽</strong></p>
+    </div>
+
+    <style>
+        .revenue-container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .page-title {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+
+        .revenue-text {
+            font-size: 1.2em;
+            margin-top: 10px;
+            color: #333;
+        }
+
+        strong {
+            font-size: 1.3em;
+            color: #007bff;
+        }
+    </style>
+{% endblock %}

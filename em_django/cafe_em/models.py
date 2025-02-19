@@ -1,5 +1,5 @@
 from django.db import models
-from django.forms import ValidationError
+from django.core.validators import MinValueValidator
 
 
 class Dish(models.Model):
@@ -61,15 +61,18 @@ class OrderItem(models.Model):
         Order,
         related_name="order_items",
         on_delete=models.CASCADE,
+        verbose_name="Заказ"
     )
     dish = models.ForeignKey(
         Dish,
         related_name="ordered_in",
         on_delete=models.CASCADE,
+        verbose_name="Блюдо"
     )
     quantity = models.PositiveIntegerField(
         default=1,
         verbose_name="Количество",
+        validators=[MinValueValidator(1)],
     )
 
     class Meta:
@@ -80,7 +83,6 @@ class OrderItem(models.Model):
                 name="unique_order_dish",
             )
         ]
-
 
     def save(self, *args, **kwargs):
         self.full_clean()
