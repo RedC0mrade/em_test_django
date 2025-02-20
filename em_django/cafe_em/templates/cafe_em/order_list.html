@@ -18,7 +18,7 @@
         <div class="order-card">
             <h2>
                 <a href="{% url 'cafe_em:order_detail' order.id %}" class="order-link">
-                    Заказ №{{ order.id }} - Стол {{ order.table_number }}
+                    Заказ ID ({{ order.id }}) - Стол {{ order.table_number }}
                 </a>
             </h2>
             <p class="order-status"><strong>Статус:</strong> {{ order.get_status_display }}</p>

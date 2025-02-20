@@ -1,16 +1,28 @@
+from typing import Any
+
 from django.contrib import admin
 
-from cafe_em.models import Dish, Order, OrderItem
+
+from .models import Dish, Order, OrderItem
 
 
 class OrderItemInline(admin.TabularInline):
+    """
+    Встроенная модель для отображения позиций заказа.
+    """
+
     model = OrderItem
     extra = 1
 
 
 @admin.register(Dish)
 class DishAdmin(admin.ModelAdmin):
-    list_display = (
+    """
+    Администрирование модели Dish.
+    Отображает их ID, названием и ценой.
+    """
+
+    list_display: tuple[str, str, str] = (
         "id",
         "name",
         "price",
@@ -19,31 +31,43 @@ class DishAdmin(admin.ModelAdmin):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = (
+    """
+    Администрирование модели Order.
+    Отображает список заказов с номером стола, статусом и общей суммой заказа.
+    """
+
+    list_display: tuple[str, str, str, str] = (
         "id",
         "table_number",
         "status",
         "total_price",
     )
-    list_filter = (
+    list_filter: tuple[str, ...] = (
         "id",
         "table_number",
         "status",
     )
-    search_fields = ("table_number",)
-    readonly_fields = ("total_price",)
+    search_fields: tuple[str, ...] = ("table_number",)
+    readonly_fields: tuple[str, ...] = ("total_price",)
+    inlines = [OrderItemInline]
 
-    def total_price(self, obj):
+    def total_price(self, obj: Order) -> Any:
+        """
+        Метод для отображения общей суммы заказа.
+        """
         return obj.total_price()
 
     total_price.short_description = "Сумма заказа"
 
-    inlines = [OrderItemInline]
-
 
 @admin.register(OrderItem)
 class OrderItemAdmin(admin.ModelAdmin):
-    list_display = (
+    """
+    Администрирование модели OrderItem.
+    Отображает id заказa, id блюда и их количество в заказе.
+    """
+
+    list_display: tuple[str, str, str] = (
         "order",
         "dish",
         "quantity",
