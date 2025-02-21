@@ -13,6 +13,16 @@ class DishSerializer(serializers.ModelSerializer):
         model = Dish
         fields = "__all__"
 
+    def validate_price(
+        self,
+        value,
+    ):
+        if value < 0:
+            raise serializers.ValidationError(
+                "Цена не может быть отрицательной.",
+            )
+        return value
+
 
 class OrderItemSerializer(serializers.ModelSerializer):
     """
@@ -56,9 +66,7 @@ class OrderCreateSerializer(serializers.ModelSerializer):
     Сериализатор для создания заказа.
     """
 
-    order_items = serializers.ListField(
-        child=serializers.DictField(), write_only=True
-    )
+    order_items = serializers.ListField(child=serializers.DictField(), write_only=True)
 
     class Meta:
         model = Order
