@@ -66,7 +66,7 @@ class OrderCreateSerializer(serializers.ModelSerializer):
     Сериализатор для создания заказа.
     """
 
-    order_items = serializers.ListField(child=serializers.DictField(), write_only=True)
+    order_items = serializers.ListField(child=serializers.DictField(), write_only=True,)
 
     class Meta:
         model = Order

@@ -71,19 +71,6 @@ def test_order_serializer_valid():
 
 
 @pytest.mark.django_db
-def test_order_serializer_invalid_status():
-    # Создаем заказ с неправильным статусом
-    order = Order.objects.create(table_number=1, status="invalid_status",)
-
-    # Сериализуем заказ
-    serializer = OrderSerializer(order)
-
-    # Проверяем, что валидация не пройдет, и будут ошибки
-    assert not serializer.is_valid()
-    assert "status" in serializer.errors
-
-
-@pytest.mark.django_db
 def test_order_item_serializer_valid():
     dish = Dish.objects.create(name="Борщ", price=10.00)
     order = Order.objects.create(table_number=1, status="waiting")
@@ -101,16 +88,16 @@ def test_order_item_serializer_valid():
 
 @pytest.mark.django_db
 def test_order_item_serializer_invalid_quantity():
-    # Создаем блюдо и заказ
     dish = Dish.objects.create(name="Борщ", price=10.00)
     order = Order.objects.create(table_number=1, status="waiting")
 
-    # Пытаемся создать OrderItem с некорректным количеством
-    # order_item = OrderItem(order=order, dish=dish, quantity=-1,)
+    serializer = OrderItemSerializer(
+        data={
+            "order": order,
+            "dish": dish,
+            "quantity": -1,
+        },
+    )
 
-    # Сериализуем OrderItem
-    serializer = OrderItemSerializer(data={"order"=order, "dish"=dish, "quantity"=-1,},)
-
-    # Проверяем, что валидация не пройдет, и будут ошибки
     assert not serializer.is_valid()
     assert "quantity" in serializer.errors

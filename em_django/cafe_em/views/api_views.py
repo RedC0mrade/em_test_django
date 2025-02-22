@@ -32,14 +32,14 @@ class OrderViewSet(viewsets.ModelViewSet):
     filter_backends = [SearchFilter]
     search_fields = ["table_number", "status",]
 
-    @action(detail=False, methods=["get"], url_path=r"status/(?P<status>\w+)")
+    @action(detail=False, methods=["get"], url_path=r"status/(?P<status>[^/.]+)")
     def filter_by_status(
         self, request: Request, status: Optional[str] = None
     ) -> Response:
         """
         Фильтрует заказы по статусу.
         """
-        orders = self.queryset.filter(status=status.upper())
+        orders = self.queryset.filter(status=status.lower())
         serializer = self.get_serializer(orders, many=True)
         return Response(serializer.data)
 
