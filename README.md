@@ -1,40 +1,61 @@
-✅ /orders/ → HTML-страница со списком заказов
-✅ /api/orders/ → JSON-список заказов
-✅ /api/orders/{id}/ → JSON-детали заказа
-✅ /api/orders/create/ → Создание заказа (POST)
-✅ /api/orders/{id}/update/ → Обновление заказа (PUT/PATCH)
-✅ /api/orders/{id}/delete/ → Удаление заказа (DELETE)
-✅ /api/orders/total/ → Общая сумма оплаченных заказов
-✅ /api/dish/ → JSON-список блюд
-✅ /api/dish/ → post Создание блюда (POST)
 
 
-$ python manage.py show_urls
-/       cafe_em.views.web_views.OrderListView   cafe_em:order_list
-/<int:pk>/order_delete  cafe_em.views.web_views.OrderDeleteView cafe_em:order_delete
-/<int:pk>/order_update  cafe_em.views.web_views.OrderUpdateView cafe_em:order_update_form
-/api/dish/      cafe_em.views.api_views.DishViewSet     cafe_em:dish-list
-/api/dish/<pk>/ cafe_em.views.api_views.DishViewSet     cafe_em:dish-detail
-/api/dish/<pk>\.<format>/       cafe_em.views.api_views.DishViewSet     cafe_em:dish-detail
-/api/dish\.<format>/    cafe_em.views.api_views.DishViewSet     cafe_em:dish-list
-/api/orders/    cafe_em.views.api_views.OrderViewSet    cafe_em:order-list
-/api/orders/<pk>/       cafe_em.views.api_views.OrderViewSet    cafe_em:order-detail
-/api/orders/<pk>/delete/        cafe_em.views.api_views.OrderViewSet    cafe_em:order-delete-order
-/api/orders/<pk>/delete\.<format>/      cafe_em.views.api_views.OrderViewSet    cafe_em:order-delete-order
-/api/orders/<pk>/update/        cafe_em.views.api_views.OrderViewSet    cafe_em:order-partial-update-order
-/api/orders/<pk>/update\.<format>/      cafe_em.views.api_views.OrderViewSet    cafe_em:order-partial-update-order 
-/api/orders/<pk>\.<format>/     cafe_em.views.api_views.OrderViewSet    cafe_em:order-detail
-/api/orders/create/     cafe_em.views.api_views.OrderViewSet    cafe_em:order-create-order
-/api/orders/create\.<format>/   cafe_em.views.api_views.OrderViewSet    cafe_em:order-create-order
-/api/orders/status/<status>/    cafe_em.views.api_views.OrderViewSet    cafe_em:order-filter-by-status
-/api/orders/status/<status>\.<format>/  cafe_em.views.api_views.OrderViewSet    cafe_em:order-filter-by-status     
-/api/orders/total/      cafe_em.views.api_views.OrderViewSet    cafe_em:order-total-sum
-/api/orders/total\.<format>/    cafe_em.views.api_views.OrderViewSet    cafe_em:order-total-sum
-/api/orders\.<format>/  cafe_em.views.api_views.OrderViewSet    cafe_em:order-list
-/dish/<int:pk>/ cafe_em.views.web_views.DishDetailView  cafe_em:dish_detail
-/dishs/ cafe_em.views.web_views.DishListView    cafe_em:dish_list
-/new_dish       cafe_em.views.web_views.DishCreateView  cafe_em:dish_form
-/new_order      cafe_em.views.web_views.OrderCreateView cafe_em:order_form
-/order/<int:pk>/        cafe_em.views.web_views.OrderDetailView cafe_em:order_detail
-/redoc/ drf_yasg.views.SchemaView       cafe_em:schema-redoc
-/total_sum      cafe_em.views.web_views.OrderTotalSumView       cafe_em:total_sum
+Система управления заказами в кафе, разработанная на Django 5+ с использованием Django REST Framework (DRF).
+
+Функциональность
+
+_ Управление блюдами (CRUD)
+_ Управление заказами (создание, обновление, удаление)
+_ Подсчет общей суммы оплаченных заказов
+_ Фильтрация заказов по статусу
+_ API с документацией Swagger и Redoc
+_ Веб-интерфейс для администраторов и сотрудников кафе
+
+Требования
+
+- Python 3.10+
+- Django 5+
+- Django REST Framework
+- PostgreSQL (или SQLite для тестирования)
+
+Установка и развертывание
+
+1️) Клонирование репозитория
+
+git clone git@github.com:RedC0mrade/em_test_django.git
+
+2️) Создание виртуального окружения
+
+python -m venv venv
+source venv/bin/activate  # Для Linux/Mac
+venv\Scripts\activate    # Для Windows
+
+3️) Установка зависимостей
+
+pip install -r requirements.txt
+
+4️) Настройка базы данных
+
+Настроить DATABASES в settings.py для использования SQLite.
+
+5️) Применение миграций
+
+python manage.py migrate
+
+6️) Создание суперпользователя
+
+python manage.py createsuperuser
+
+7️) Запуск сервера разработки
+
+python manage.py runserver
+
+8️) Доступ к проекту
+
+Веб-интерфейс: http://127.0.0.1:8000/ Панель администратора: http://127.0.0.1:8000/admin/ API: http://127.0.0.1:8000/api/ Документация API:
+
+Redoc: http://127.0.0.1:8000/redoc/
+
+Тестирование
+
+pytest

@@ -66,7 +66,10 @@ class OrderCreateSerializer(serializers.ModelSerializer):
     Сериализатор для создания заказа.
     """
 
-    order_items = serializers.ListField(child=serializers.DictField(), write_only=True,)
+    order_items = serializers.ListField(
+        child=serializers.DictField(),
+        write_only=True,
+    )
 
     class Meta:
         model = Order
@@ -115,7 +118,11 @@ class OrderUpdateSerializer(serializers.ModelSerializer):
             "order_items",
         ]
 
-    def update(self, instance: Order, validated_data: Dict[str, Any]) -> Order:
+    def update(
+        self,
+        instance: Order,
+        validated_data: Dict[str, Any],
+    ) -> Order:
         """
         Обновляет существующий заказ и связанные с ним позиции заказа.
         """
@@ -128,7 +135,10 @@ class OrderUpdateSerializer(serializers.ModelSerializer):
             "table_number",
             instance.table_number,
         )
-        instance.status = validated_data.get("status", instance.status)
+        instance.status = validated_data.get(
+            "status",
+            instance.status,
+        )
         instance.save()
 
         if order_items_data is not None:

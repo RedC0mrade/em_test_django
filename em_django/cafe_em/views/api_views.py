@@ -1,5 +1,6 @@
 from typing import Optional
 from django.db.models import F, Sum
+from django.shortcuts import get_object_or_404
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -30,9 +31,14 @@ class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all().order_by("-id")
     serializer_class = OrderSerializer
     filter_backends = [SearchFilter]
-    search_fields = ["table_number", "status",]
+    search_fields = [
+        "table_number",
+        "status",
+    ]
 
-    @action(detail=False, methods=["get"], url_path=r"status/(?P<status>[^/.]+)")
+    @action(
+        detail=False, methods=["get"], url_path=r"status/(?P<status>[^/.]+)"
+    )
     def filter_by_status(
         self, request: Request, status: Optional[str] = None
     ) -> Response:
@@ -43,8 +49,15 @@ class OrderViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(orders, many=True)
         return Response(serializer.data)
 
-    @action(detail=False, methods=["post"], url_path="create",)
-    def create_order(self, request: Request,) -> Response:
+    @action(
+        detail=False,
+        methods=["post"],
+        url_path="create",
+    )
+    def create_order(
+        self,
+        request: Request,
+    ) -> Response:
         """
         Создает новый заказ на основе переданных данных.
         """
@@ -52,42 +65,59 @@ class OrderViewSet(viewsets.ModelViewSet):
         if serializer.is_valid():
             order = serializer.save()
             return Response(
-                OrderSerializer(order).data, status=status.HTTP_201_CREATED,
+                OrderSerializer(order).data,
+                status=status.HTTP_201_CREATED,
             )
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST,)
+        return Response(
+            serializer.errors,
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
     @action(detail=True, methods=["patch"], url_path="update")
     def partial_update_order(
-        self, request: Request, pk: Optional[str] = None,
+        self,
+        request: Request,
+        pk: Optional[str] = None,
     ) -> Response:
         """
         Частично обновляет заказ.
         """
-        # Выводим в консоль для отладки идентификатор обновляемого заказа
-        print(f"Updating order with ID: {pk}")
-        order = self.get_object()
+        order = get_object_or_404(Order, pk=pk)
         serializer = OrderUpdateSerializer(
-            order, data=request.data, partial=True,
+            order,
+            data=request.data,
+            partial=True,
         )
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST,)
+        return Response(
+            serializer.errors,
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
     @action(detail=True, methods=["delete"], url_path="delete")
     def delete_order(
-        self, request: Request, pk: Optional[str] = None
+        self,
+        *args,
+        **kwargs,
     ) -> Response:
         """
         Удаляет заказ.
         """
-        order = self.get_object()
+        pk = kwargs.get("pk")
+        order = get_object_or_404(Order, pk=pk)
         order.delete()
         return Response(
-            {"message": "Order deleted"}, status=status.HTTP_204_NO_CONTENT,
+            {"message": "Order deleted"},
+            status=status.HTTP_204_NO_CONTENT,
         )
 
-    @action(detail=False, methods=["get"], url_path="total",)
+    @action(
+        detail=False,
+        methods=["get"],
+        url_path="total",
+    )
     def total_sum(self, request: Request) -> Response:
         """
         Вычисляет общую сумму всех оплаченных заказов.
